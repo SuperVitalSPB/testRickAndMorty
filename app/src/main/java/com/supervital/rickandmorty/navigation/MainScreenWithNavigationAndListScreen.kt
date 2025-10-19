@@ -29,7 +29,7 @@ fun MainScreenWithNavigationAndListScreen(
 
     Scaffold(
         topBar = {
-            TopBarAppl(
+            TopBarApplication(
                 currentScreen = currentScreen,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() }
@@ -60,7 +60,7 @@ fun MainScreenWithNavigationAndListScreen(
 }
 
 @Composable
-fun TopBarAppl(
+fun TopBarApplication(
     currentScreen: NavItem,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,

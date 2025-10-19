@@ -23,23 +23,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.supervital.rickandmorti.models.CharacterInfo
+import com.supervital.rickandmorti.models.CharactersListInfo
 
 
 @Composable
 fun MainListScreen(viewModel: MainListViewModel = hiltViewModel()) {
 
-    val data by viewModel.data.observeAsState(initial = emptyList())
-    LaunchedEffect(true) {
-        viewModel.loadData()
+    val data by viewModel.data.observeAsState(initial = CharactersListInfo())
+    var page by remember { mutableIntStateOf(1) }
+    LaunchedEffect(page) {
+        viewModel.loadData(page)
     }
     LazyVerticalGrid (modifier = Modifier.height(300.dp),
         columns = GridCells.Fixed(2),
@@ -48,7 +53,7 @@ fun MainListScreen(viewModel: MainListViewModel = hiltViewModel()) {
         contentPadding = PaddingValues(16.dp)
     ) {
         items(
-            items = data,
+            items = data.list,
             key = { it.id }) { item ->
             CharacterInfoScreen(item)
             Spacer(modifier = Modifier.height(10.dp))
