@@ -14,18 +14,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,29 +34,59 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.supervital.rickandmorti.models.CharacterInfo
-import com.supervital.rickandmorti.models.CharactersListInfo
-
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 
 @Composable
 fun MainListScreen(viewModel: MainListViewModel = hiltViewModel()) {
+    val gridState = rememberLazyGridState()
+    var isLoading = viewModel.isLoading
 
-    val data by viewModel.data.observeAsState(initial = CharactersListInfo())
-    var page by remember { mutableIntStateOf(1) }
-    LaunchedEffect(page) {
-        viewModel.loadData(page)
+    // Ищем, когда пользователь достигает последнего элемента
+    LaunchedEffect(gridState) {
+        snapshotFlow { gridState.layoutInfo.visibleItemsInfo.lastOrNull() }
+            .map { it?.index ?: 1 }
+            .distinctUntilChanged()
+            .collect { lastVisibleItemIndex ->
+                if (lastVisibleItemIndex >= viewModel.items.size - 1) {
+                    viewModel.loadMoreItems()
+                }
+            }
     }
+
+    // Отображение прогресс-индикатора при загрузке
+    LaunchedEffect(viewModel.items.size) {
+        if (viewModel.items.isNotEmpty()) {
+            isLoading = true
+        } else {
+            isLoading = false
+        }
+    }
+
     LazyVerticalGrid (modifier = Modifier.height(300.dp),
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(16.dp)
+        contentPadding = PaddingValues(16.dp),
+        state = gridState
     ) {
-        items(
-            items = data.characters,
-            key = { it.id }) { item ->
+        items(items = viewModel.items, key = { it.id }) { item ->
             CharacterInfoScreen(item)
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(50.dp))
+        }
 
+        // Отображение индикатора загрузки в конце списка
+        if (isLoading) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
         }
     }
 }

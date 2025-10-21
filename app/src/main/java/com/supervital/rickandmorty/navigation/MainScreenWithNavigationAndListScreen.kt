@@ -48,7 +48,6 @@ fun MainScreenWithNavigationAndListScreen(
                     .padding(innerPadding)
             ) {
                 composable(NavRoutes.MainList.route) {
-
                     MainListScreen()
                 }
                 composable(NavRoutes.Details.route) {
