@@ -1,7 +1,9 @@
 package com.supervital.rickandmorty.feature.mainlist
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,15 +34,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.supervital.rickandmorti.models.CharacterInfo
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
+const val TAG = "charTest:MainListScreen"
+
 @Composable
-fun MainListScreen(viewModel: MainListViewModel = hiltViewModel()) {
+fun MainListScreen(
+    showDetails: (Int) -> Unit,
+    viewModel: MainListViewModel = hiltViewModel()
+) {
     val gridState = rememberLazyGridState()
-    var isLoading = viewModel.isLoading
+    val isLoading = viewModel.isLoading
 
     // Ищем, когда пользователь достигает последнего элемента
     LaunchedEffect(gridState) {
@@ -54,15 +62,6 @@ fun MainListScreen(viewModel: MainListViewModel = hiltViewModel()) {
             }
     }
 
-    // Отображение прогресс-индикатора при загрузке
-    LaunchedEffect(viewModel.items.size) {
-        if (viewModel.items.isNotEmpty()) {
-            isLoading = true
-        } else {
-            isLoading = false
-        }
-    }
-
     LazyVerticalGrid (modifier = Modifier.height(300.dp),
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -71,7 +70,9 @@ fun MainListScreen(viewModel: MainListViewModel = hiltViewModel()) {
         state = gridState
     ) {
         items(items = viewModel.items, key = { it.id }) { item ->
-            CharacterInfoScreen(item)
+            CharacterInfoScreen(
+                characterInfo = item,
+                showDetails = showDetails)
             Spacer(modifier = Modifier.height(50.dp))
         }
 
@@ -92,10 +93,19 @@ fun MainListScreen(viewModel: MainListViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun CharacterInfoScreen(characterInfo: CharacterInfo) {
+fun CharacterInfoScreen(
+    characterInfo: CharacterInfo,
+    showDetails: (Int) -> Unit
+) {
     Box(modifier = Modifier
         .width(160.dp)
         .height(280.dp)
+        .clickable(
+            onClick = {
+                Log.d(TAG, "characterInfo = $characterInfo")
+                showDetails(characterInfo.id)
+            }
+        )
         .background(color = Color.DarkGray, shape = RoundedCornerShape(16.dp))
     ) {
         Column (modifier = Modifier.fillMaxSize(),
@@ -131,7 +141,7 @@ fun CharacterInfoScreen(characterInfo: CharacterInfo) {
                     Text(
                         modifier = Modifier
                             .padding(end = 12.dp)
-                            .align (Alignment.CenterEnd),
+                            .align(Alignment.CenterEnd),
                         textAlign = TextAlign.End,
                         color = Color.Gray,
                         text = characterInfo.status.statusString)
