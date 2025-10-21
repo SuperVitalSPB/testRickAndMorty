@@ -39,6 +39,7 @@ fun MainScreenWithNavigationAndListScreen(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = NavItems.getNavItem( backStackEntry?.destination?.route)
 
+
     Scaffold(
         topBar = {
             TopBarApplication(
