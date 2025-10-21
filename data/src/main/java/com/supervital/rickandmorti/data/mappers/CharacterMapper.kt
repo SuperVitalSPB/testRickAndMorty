@@ -29,7 +29,7 @@ fun CharacterEntity.map() =
 fun CharactersListEntity.map() =
     CharactersListInfo (
         info = this.info.map(),
-        list = this.results.map {
+        characters = this.results.map {
             it.map()
         }
     )

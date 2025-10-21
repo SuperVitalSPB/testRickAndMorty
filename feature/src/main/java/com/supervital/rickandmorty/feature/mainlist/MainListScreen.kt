@@ -53,7 +53,7 @@ fun MainListScreen(viewModel: MainListViewModel = hiltViewModel()) {
         contentPadding = PaddingValues(16.dp)
     ) {
         items(
-            items = data.list,
+            items = data.characters,
             key = { it.id }) { item ->
             CharacterInfoScreen(item)
             Spacer(modifier = Modifier.height(10.dp))
