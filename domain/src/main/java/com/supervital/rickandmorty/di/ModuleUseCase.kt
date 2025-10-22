@@ -3,6 +3,7 @@ package com.supervital.rickandmorty.di
 import com.supervital.rickandmorty.repository.CharacterRepository
 import com.supervital.rickandmorty.usecase.CharacterGetDataUseCase
 import com.supervital.rickandmorty.usecase.CharacterGetListUseCase
+import com.supervital.rickandmorty.usecase.CharacterGetLocationUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,5 +23,10 @@ class ModuleUseCase {
     @ViewModelScoped
     fun provideCharacterGetListUseCase(characterRepository: CharacterRepository) =
         CharacterGetListUseCase(characterRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideCharacterGetLocationUseCase(characterRepository: CharacterRepository) =
+        CharacterGetLocationUseCase(characterRepository)
 
 }

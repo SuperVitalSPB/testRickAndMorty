@@ -19,23 +19,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.supervital.rickandmorty.feature.details.DetailsScreen
 import com.supervital.rickandmorty.feature.details.TitleDetailScreen
 import com.supervital.rickandmorty.feature.mainlist.MainListScreen
 import com.supervital.rickandmorty.feature.mainlist.TAG
 import com.supervital.rickandmorty.navigation.route.NavItems
 import com.supervital.rickandmorty.navigation.route.NavRoutes
+import com.supervital.rickandmorty.navigation.route.PARAM_CHARACTER_ID
 
 @Composable
 fun MainScreenWithNavigationAndListScreen(
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = NavItems.getNavItem( backStackEntry?.destination?.route)
+    val currentScreen = NavItems.getNavItem(backStackEntry?.destination?.route)
 
     Scaffold(
         topBar = {
@@ -63,21 +66,18 @@ fun MainScreenWithNavigationAndListScreen(
                     .padding(innerPadding)
             ) {
                 composable(NavRoutes.MainList.route) {
-                    MainListScreen( showDetails = { id ->
+                    MainListScreen(showDetails = { id ->
                         Log.d(TAG, "id = $id")
-                        navController.apply {
-                            currentBackStackEntry?.savedStateHandle?.set(NavRoutes.Details.paramName, id)
-                            navigate(NavRoutes.Details.route)
-                        }
-                        })
+                        navController.navigate(NavRoutes.Details.paramRoute(id))
+                    })
                 }
-                composable(NavRoutes.Details.route) {
-                    backStackEntry?.let { backStackEntry ->
-                        backStackEntry.savedStateHandle
-                            .get<Int>(NavRoutes.Details.paramName)?.let { id ->
-                                DetailsScreen(id)
-                            }
-                    }
+                composable(
+                    route = NavRoutes.Details.route,
+                    arguments = listOf(navArgument(PARAM_CHARACTER_ID) { type = NavType.LongType })
+                ) { backStackEntry ->
+                        backStackEntry.arguments?.getLong(PARAM_CHARACTER_ID)?.let {
+                            DetailsScreen(idCharacter = it)
+                        }
                 }
             }
         }

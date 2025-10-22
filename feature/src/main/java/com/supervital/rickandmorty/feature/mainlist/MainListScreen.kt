@@ -43,7 +43,7 @@ const val TAG = "charTest:MainListScreen"
 
 @Composable
 fun MainListScreen(
-    showDetails: (Int) -> Unit,
+    showDetails: (Long) -> Unit,
     viewModel: MainListViewModel = hiltViewModel()
 ) {
     val gridState = rememberLazyGridState()
@@ -94,7 +94,7 @@ fun MainListScreen(
 @Composable
 fun CharacterInfoScreen(
     characterInfo: CharacterInfo,
-    showDetails: (Int) -> Unit
+    showDetails: (Long) -> Unit
 ) {
     Box(modifier = Modifier
         .width(160.dp)
@@ -126,13 +126,13 @@ fun CharacterInfoScreen(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .height(32.dp)
-                        .width(characterInfo.status.widthBox)
+                        .width(characterInfo.statusInfo.widthBox)
                         .clip(RoundedCornerShape(32.dp, 0.dp, 0.dp, 0.dp))
                         .background(color = Color.Black)
                 ) {
                     Canvas(Modifier.size(50.dp)) {
                         drawCircle(
-                            color = characterInfo.status.colorPunkt,
+                            color = characterInfo.statusInfo.colorPunkt,
                             center = center,
                             radius = 4.dp.toPx()
                         )
@@ -143,7 +143,7 @@ fun CharacterInfoScreen(
                             .align(Alignment.CenterEnd),
                         textAlign = TextAlign.End,
                         color = Color.Gray,
-                        text = characterInfo.status.statusString)
+                        text = characterInfo.statusInfo.statusString)
                 }
             }
 

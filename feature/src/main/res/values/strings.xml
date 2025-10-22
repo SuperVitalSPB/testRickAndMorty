@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">test Rick And Morty</string>
+    <string name="title_detail">Character Information</string>
     <string name="name">name:</string>
     <string name="gender">gender:</string>
     <string name="species">species:</string>

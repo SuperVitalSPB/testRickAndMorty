@@ -5,6 +5,7 @@ import com.supervital.rickandmorty.data.api.CharacterService
 import com.supervital.rickandmorty.data.mappers.map
 import com.supervital.rickandmorty.models.CharacterInfo
 import com.supervital.rickandmorty.models.CharactersListInfo
+import com.supervital.rickandmorty.models.LocationInfo
 import javax.inject.Inject
 
 class CharacterRepositoryImpl @Inject constructor(
@@ -16,5 +17,9 @@ class CharacterRepositoryImpl @Inject constructor(
 
     override suspend fun getCharacter(id: Long): CharacterInfo =
         characterService.getCharacter(id = id).map()
+
+    override suspend fun getLocation(fullUrl: String): LocationInfo =
+        characterService.getLocation(fullUrl).map()
+
 
 }
