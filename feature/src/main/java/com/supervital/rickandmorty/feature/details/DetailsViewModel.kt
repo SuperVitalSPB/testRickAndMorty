@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.supervital.rickandmorti.models.CharacterInfo
-import com.supervital.rickandmorti.usecase.CharacterGetDataUseCase
+import com.supervital.rickandmorty.models.CharacterInfo
+import com.supervital.rickandmorty.usecase.CharacterGetDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

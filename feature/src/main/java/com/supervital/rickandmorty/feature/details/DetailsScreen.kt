@@ -11,3 +11,8 @@ fun DetailsScreen(
 ) {
     Text(text = characterInfoId.toString())
 }
+
+@Composable
+fun TitleDetailScreen() {
+    Text(text = "LocalContext.current.getString(com.supervital.rickandmorty.R.string.title_detail)")
+}

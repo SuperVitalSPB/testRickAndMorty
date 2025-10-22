@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.supervital.rickandmorti"
+    namespace = "com.supervital.rickandmorty"
     compileSdk = 36
 
     defaultConfig {

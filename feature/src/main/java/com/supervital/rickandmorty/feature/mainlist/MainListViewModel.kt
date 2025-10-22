@@ -2,8 +2,8 @@ package com.supervital.rickandmorty.feature.mainlist
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import com.supervital.rickandmorti.models.CharacterInfo
-import com.supervital.rickandmorti.usecase.CharacterGetListUseCase
+import com.supervital.rickandmorty.models.CharacterInfo
+import com.supervital.rickandmorty.usecase.CharacterGetListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

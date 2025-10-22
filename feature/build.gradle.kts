@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.supervital.rickandmorti"
+    namespace = "com.supervital.rickandmorty"
     compileSdk {
         version = release(36)
     }

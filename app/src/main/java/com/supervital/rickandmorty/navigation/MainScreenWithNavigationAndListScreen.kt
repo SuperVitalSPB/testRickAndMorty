@@ -24,13 +24,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.supervital.rickandmorty.feature.details.DetailsScreen
+import com.supervital.rickandmorty.feature.details.TitleDetailScreen
 import com.supervital.rickandmorty.feature.mainlist.MainListScreen
 import com.supervital.rickandmorty.feature.mainlist.TAG
-import com.supervital.rickandmorty.navigation.route.NavItem
 import com.supervital.rickandmorty.navigation.route.NavItems
 import com.supervital.rickandmorty.navigation.route.NavRoutes
-
-const val TAG = "MainScreenWithNavigationAndListScreen"
 
 @Composable
 fun MainScreenWithNavigationAndListScreen(
@@ -39,13 +37,17 @@ fun MainScreenWithNavigationAndListScreen(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = NavItems.getNavItem( backStackEntry?.destination?.route)
 
-
     Scaffold(
         topBar = {
             TopBarApplication(
-                currentScreen = currentScreen,
                 canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() }
+                navigateUp = { navController.navigateUp() },
+                titleScreen = {
+                    when (currentScreen.route) {
+                        NavRoutes.Details.route -> TitleDetailScreen()
+                        else -> {}
+                    }
+                }
             )
         },
     ) { innerPadding ->
@@ -85,14 +87,14 @@ fun MainScreenWithNavigationAndListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBarApplication(
-    currentScreen: NavItem,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    titleScreen: @Composable () -> Unit
 ) {
     TopAppBar(
         modifier = modifier,
-        title = { "" },
+        title = titleScreen,
         navigationIcon = {
             if (canNavigateBack) {
                 IconButton(onClick = navigateUp) {
@@ -104,7 +106,7 @@ fun TopBarApplication(
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Blue, // Цвет фона панели
+            containerColor = Color.Black, // Цвет фона панели
             titleContentColor = Color.White, // Цвет текста заголовка
             navigationIconContentColor = Color.White, // Цвет иконки навигации
             actionIconContentColor = Color.White // Цвет иконок действий
