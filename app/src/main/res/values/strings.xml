@@ -1,11 +1,3 @@
 <resources>
     <string name="app_name">test Rick And Morty</string>
-    <string name="name">name:</string>
-    <string name="gender">gender:</string>
-    <string name="species">species:</string>
-    <string name="type">type:</string>
-    <string name="location">location:</string>
-    <string name="dimension">dimension:</string>
-    <string name="prompt_search">Search characters</string>
-    <string name="prompt_enter_search">Search here…</string>
 </resources>

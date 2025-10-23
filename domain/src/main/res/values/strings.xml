@@ -11,4 +11,11 @@
     <string name="prompt_search">Search characters</string>
     <string name="prompt_enter_search">Search here…</string>
 
+    <string name="filter_param_name">name</string>
+    <string name="filter_param_status">status</string>
+    <string name="filter_param_species">species</string>
+    <string name="filter_param_type">type</string>
+    <string name="filter_param_gender">gender</string>
+
+    <string name="filter_by">filter by:</string>
 </resources>

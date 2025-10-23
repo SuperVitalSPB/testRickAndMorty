@@ -31,7 +31,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.supervital.rickandmorty.R
+import com.supervital.rickandmorty.R.string
 
 
 @Composable
@@ -61,7 +61,7 @@ fun ClosedAppBar(onSearchClicked: () -> Unit) {
     TopAppBar(
         title = {
             Text(
-                text = stringResource(id = R.string.prompt_search),
+                text = stringResource(id = string.prompt_search),
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable(onClick = { onSearchClicked() }),
@@ -96,6 +96,7 @@ fun OpenedAppBar(
 ) {
     val focusRequester = remember { FocusRequester() }
 
+    RadioButtonsPopupExample()
 
     Surface(
         modifier = Modifier
@@ -115,7 +116,7 @@ fun OpenedAppBar(
             },
             placeholder = {
                 Text(
-                    text = stringResource(R.string.prompt_enter_search),
+                    text = stringResource(string.prompt_enter_search),
                     color = Color.Black
                 )
             },
