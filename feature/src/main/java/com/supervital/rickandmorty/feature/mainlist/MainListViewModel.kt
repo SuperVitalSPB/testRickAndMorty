@@ -1,5 +1,6 @@
 package com.supervital.rickandmorty.feature.mainlist
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
@@ -39,7 +40,9 @@ class MainListViewModel @Inject constructor(
         _searchTextState.value = newValue
     }
 
-    fun findCharacters() {
+    fun findCharacters(filterParam: String, searchText: String) {
+        Log.d(TAG, "filterParam = $filterParam")
+        Log.d(TAG, "searchText = $searchText")
         viewModelScope.launch {
 
         }
@@ -53,5 +56,9 @@ class MainListViewModel @Inject constructor(
         _items.addAll(data.characters)
         isLoading = false
         currentPage++
+    }
+
+    companion object {
+        const val TAG = "charTest:MainListViewModel"
     }
 }

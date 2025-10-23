@@ -26,7 +26,7 @@ import com.supervital.rickandmorty.navigation.route.NavItems
 import com.supervital.rickandmorty.navigation.route.NavRoutes
 import com.supervital.rickandmorty.navigation.route.PARAM_CHARACTER_ID
 
-const val TAG = "MainScreenWithNavigationAndListScreen"
+const val TAG = "charTest:MainScreenWithNavigationAndListScreen"
 
 @Composable
 fun MainScreenWithNavigationAndListScreen(

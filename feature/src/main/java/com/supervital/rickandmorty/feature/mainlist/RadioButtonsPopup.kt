@@ -21,10 +21,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.supervital.rickandmorty.R
 
+const val EMPTY_STR = ""
+
 @Composable
-fun RadioButtonsPopupExample() {
+fun RadioButtonsPopup(filterParam: (String) -> Unit) {
     var showDialog by remember { mutableStateOf(true) }
-    var selectedOption by remember { mutableStateOf("") } // Начальное выбранное значение
+    var selectedOption by remember { mutableStateOf(EMPTY_STR) } // Начальное выбранное значение
 
     val filters = listOf( // stringArrayResource глючит
                             stringResource(R.string.filter_param_name),
@@ -52,6 +54,7 @@ fun RadioButtonsPopupExample() {
                                 selected = (text == selectedOption),
                                 onClick = {
                                     selectedOption = text
+                                    filterParam(text)
                                     showDialog = false
                                 }
                             )
@@ -65,13 +68,14 @@ fun RadioButtonsPopupExample() {
             confirmButton = {
                 TextButton(
                     onClick = {
-                        selectedOption = ""
+                        selectedOption = EMPTY_STR
+                        filterParam(EMPTY_STR)
                         showDialog = false
                     }
                 ) {
                     Text(stringResource(  android.R.string.cancel))
                 }
-            },
+            }
         )
     }
 }
