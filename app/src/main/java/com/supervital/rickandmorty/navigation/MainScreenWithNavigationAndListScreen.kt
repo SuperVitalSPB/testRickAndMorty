@@ -28,6 +28,7 @@ import androidx.navigation.navArgument
 import com.supervital.rickandmorty.feature.details.DetailsScreen
 import com.supervital.rickandmorty.feature.details.TitleDetailScreen
 import com.supervital.rickandmorty.feature.mainlist.MainListScreen
+import com.supervital.rickandmorty.feature.mainlist.SearchBarCharacterScreen
 import com.supervital.rickandmorty.feature.mainlist.TAG
 import com.supervital.rickandmorty.navigation.route.NavItems
 import com.supervital.rickandmorty.navigation.route.NavRoutes
@@ -48,6 +49,7 @@ fun MainScreenWithNavigationAndListScreen(
                 titleScreen = {
                     when (currentScreen.route) {
                         NavRoutes.Details.route -> TitleDetailScreen()
+                        NavRoutes.MainList.route -> SearchBarCharacterScreen()
                         else -> {}
                     }
                 }

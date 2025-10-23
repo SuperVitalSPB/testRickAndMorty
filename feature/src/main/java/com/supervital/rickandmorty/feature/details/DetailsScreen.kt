@@ -45,17 +45,12 @@ fun DetailsScreen(
     val characterLocation by viewModel.dataLocation.observeAsState()
 
     characterInfo?.let { characterInfo ->
-        CharacterInfoScreen(characterInfo, characterLocation)
+        CharacterDetailsScreen(characterInfo, characterLocation)
     }
 }
 
 @Composable
-fun TitleDetailScreen() {
-    Text(text = LocalContext.current.getString(R.string.title_detail))
-}
-
-@Composable
-fun CharacterInfoScreen(
+private fun CharacterDetailsScreen(
     characterInfo: CharacterInfo,
     characterLocation: LocationInfo?
 ) {
