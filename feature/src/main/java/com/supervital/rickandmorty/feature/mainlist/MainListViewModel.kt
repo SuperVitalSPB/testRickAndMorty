@@ -1,18 +1,14 @@
 package com.supervital.rickandmorty.feature.mainlist
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.supervital.rickandmorty.models.CharacterInfo
 import com.supervital.rickandmorty.usecase.CharacterGetListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,14 +17,35 @@ class MainListViewModel @Inject constructor(
     private val characterGetListUseCase: CharacterGetListUseCase
 ) : ViewModel() {
 
+    private val _searchWidgetState: MutableState<SearchWidgetState> =
+        mutableStateOf(value = SearchWidgetState.CLOSED)
+    val searchWidgetState: State<SearchWidgetState> = _searchWidgetState
+
+    private val _searchTextState: MutableState<String> =
+        mutableStateOf(value = "")
+    val searchTextState: State<String> = _searchTextState
+
     private val _items = mutableStateListOf<CharacterInfo>()
     val items: List<CharacterInfo> = _items
     private var maxPages = 1
     private var currentPage = 1
     var isLoading = false
 
+    fun updateSearchWidgetState(newValue: SearchWidgetState) {
+        _searchWidgetState.value = newValue
+    }
 
-    suspend fun loadMoreItems() {
+    fun updateSearchTextState(newValue: String) {
+        _searchTextState.value = newValue
+    }
+
+    fun findCharacters() {
+        viewModelScope.launch {
+
+        }
+    }
+
+    suspend fun loadCharacters() {
         if (isLoading || currentPage > maxPages) return
         isLoading = true
         val data = characterGetListUseCase(currentPage)
