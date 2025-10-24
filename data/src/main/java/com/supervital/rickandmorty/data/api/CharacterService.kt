@@ -6,14 +6,16 @@ import com.supervital.rickandmorty.data.models.LocationEntity
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 import retrofit2.http.Url
 
 interface CharacterService {
 
     @GET("character")
-    suspend fun getCharacters(
-        @Query("page") page: Int
-    ): CharactersListEntity
+    suspend fun getCharacters(@Query("page") page: Int): CharactersListEntity
+
+    @GET("character")
+    suspend fun searchCharacters(@QueryMap params: Map<String, String>): CharactersListEntity
 
     @GET("character/{id}")
     suspend fun getCharacter(@Path("id") id: Long): CharacterEntity

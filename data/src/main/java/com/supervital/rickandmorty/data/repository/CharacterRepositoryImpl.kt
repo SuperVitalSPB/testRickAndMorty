@@ -15,6 +15,9 @@ class CharacterRepositoryImpl @Inject constructor(
     override suspend fun getCharacters(page: Int): CharactersListInfo =
         characterService.getCharacters(page).map()
 
+    override suspend fun searchCharacters(params: Map<String, String>): CharactersListInfo =
+        characterService.searchCharacters(params).map()
+
     override suspend fun getCharacter(id: Long): CharacterInfo =
         characterService.getCharacter(id = id).map()
 

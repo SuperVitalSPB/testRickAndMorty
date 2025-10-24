@@ -53,7 +53,7 @@ fun MainTopAppBarScreen(viewModel: MainListViewModel = hiltViewModel()) {
                 text = viewModel.searchTextState.value,
                 onTextChange =  { viewModel.updateSearchTextState(newValue = it) },
                 onCloseClicked = { viewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED) },
-                onSearchClicked = { filterParam, searchText -> viewModel.findCharacters(filterParam, searchText) }
+                onSearchClicked = { filterParam, searchText -> viewModel.filterCharacters(filterParam, searchText) }
             )
         }
     }

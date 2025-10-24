@@ -8,6 +8,8 @@ interface CharacterRepository {
 
     suspend fun getCharacters(page: Int):CharactersListInfo
 
+    suspend fun searchCharacters(params: Map<String, String>): CharactersListInfo
+
     suspend fun getCharacter(id: Long): CharacterInfo
 
     suspend fun getLocation(fullUrl: String): LocationInfo
