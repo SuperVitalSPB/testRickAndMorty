@@ -1,5 +1,9 @@
 @file:Suppress("DEPRECATION")
 
+import org.gradle.kotlin.dsl.debugImplementation
+import org.gradle.kotlin.dsl.releaseImplementation
+
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -19,6 +23,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -48,6 +55,9 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.retrofit2.converter.gson)
+
+    // debugImplementation(libs.chucker.library)
+    // releaseImplementation(libs.chucker.library.no.op)
 
     implementation(project(":domain"))
 

@@ -26,6 +26,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.supervital.rickandmorty.models.CharacterInfo
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
@@ -43,12 +48,15 @@ const val TAG = "charTest:MainListScreen"
 
 @Composable
 fun MainListScreen(
-    showDetails: (Long) -> Unit,
-    viewModel: MainListViewModel = hiltViewModel()
+    viewModel: MainListViewModel,
+    showDetails: (Long) -> Unit
 ) {
     val gridState = rememberLazyGridState()
     val isLoading = viewModel.isLoading
 
+    LaunchedEffect( viewModel.searchTextState.value) {
+        viewModel.loadCharacters()
+    }
     LaunchedEffect(gridState) {
         snapshotFlow { gridState.layoutInfo.visibleItemsInfo.lastOrNull() }
             .map { it?.index ?: 1 }
@@ -60,7 +68,8 @@ fun MainListScreen(
             }
     }
 
-    LazyVerticalGrid (modifier = Modifier.height(300.dp),
+    LazyVerticalGrid(
+        modifier = Modifier.height(300.dp),
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -70,10 +79,10 @@ fun MainListScreen(
         items(items = viewModel.items, key = { it.id }) { item ->
             CharacterInfoScreen(
                 characterInfo = item,
-                showDetails = showDetails)
+                showDetails = showDetails
+            )
             Spacer(modifier = Modifier.height(50.dp))
         }
-
         if (isLoading) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Box(
@@ -94,19 +103,22 @@ fun CharacterInfoScreen(
     characterInfo: CharacterInfo,
     showDetails: (Long) -> Unit
 ) {
-    Box(modifier = Modifier
-        .width(160.dp)
-        .height(280.dp)
-        .clickable(
-            onClick = {
-                Log.d(TAG, "characterInfo = $characterInfo")
-                showDetails(characterInfo.id)
-            }
-        )
-        .background(color = Color.DarkGray, shape = RoundedCornerShape(16.dp))
+    Box(
+        modifier = Modifier
+            .width(160.dp)
+            .height(280.dp)
+            .clickable(
+                onClick = {
+                    Log.d(TAG, "characterInfo = $characterInfo")
+                    showDetails(characterInfo.id)
+                }
+            )
+            .background(color = Color.DarkGray, shape = RoundedCornerShape(16.dp))
     ) {
-        Column (modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Box {
                 AsyncImage(
                     model = characterInfo.image,
@@ -141,19 +153,24 @@ fun CharacterInfoScreen(
                             .align(Alignment.CenterEnd),
                         textAlign = TextAlign.End,
                         color = Color.Gray,
-                        text = characterInfo.statusInfo.statusString)
+                        text = characterInfo.statusInfo.statusString
+                    )
                 }
             }
 
             Spacer(modifier = Modifier.height(32.dp))
-            Text(textAlign = TextAlign.Center,
+            Text(
+                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.White,
-                text = characterInfo.name)
-            Text(textAlign = TextAlign.Center,
+                text = characterInfo.name
+            )
+            Text(
+                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray,
-                text = "${characterInfo.gender} | ${characterInfo.species}")
+                text = "${characterInfo.gender} | ${characterInfo.species}"
+            )
         }
 
     }

@@ -1,6 +1,5 @@
 package com.supervital.rickandmorty.feature.mainlist
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
@@ -20,16 +19,15 @@ class MainListViewModel @Inject constructor(
     private val characterSearchUseCase: CharacterSearchUseCase
 ) : ViewModel() {
 
-    private val _searchWidgetState: MutableState<SearchWidgetState> =
-        mutableStateOf(value = SearchWidgetState.CLOSED)
+    private val _searchWidgetState: MutableState<SearchWidgetState> = mutableStateOf(value = SearchWidgetState.CLOSED)
     val searchWidgetState: State<SearchWidgetState> = _searchWidgetState
 
-    private val _searchTextState: MutableState<String> =
-        mutableStateOf(value = "")
-    val searchTextState: State<String> = _searchTextState
+    private val _searchTextState: MutableState<Pair<String, String>> = mutableStateOf(value = Pair("", ""))
+    val searchTextState: State<Pair<String, String>> = _searchTextState
 
     private val _items = mutableStateListOf<CharacterInfo>()
     val items: List<CharacterInfo> = _items
+
     private var maxPages = 1
     private var currentPage = 1
     var isLoading = false
@@ -39,28 +37,41 @@ class MainListViewModel @Inject constructor(
     }
 
     fun updateSearchTextState(newValue: String) {
-        _searchTextState.value = newValue
+        val paramName = _searchTextState.value.first
+        _searchTextState.value = Pair(paramName, newValue)
     }
 
-    fun filterCharacters(filterParam: String, searchText: String) {
-        Log.d(TAG, "filterParam = $filterParam")
-        Log.d(TAG, "searchText = $searchText")
+    private fun isFilterOpened() = _searchWidgetState.value == SearchWidgetState.OPENED
+
+    private fun isFilterReady() =
+        searchTextState.value.first.isNotEmpty()
+                && searchTextState.value.second.isNotEmpty()
+                && searchTextState.value.second.length >= MIN_LEN_SEARCH
+
+    fun loadFilter() {
         viewModelScope.launch {
-            loadCharacters(mutableMapOf(filterParam to searchText))
+            loadCharacters()
         }
     }
 
-    suspend fun loadCharacters(filterParams: Map<String, String>? = null) {
-        if (isLoading || currentPage > maxPages) return
+    suspend fun loadCharacters() {
+        if ((isLoading || (currentPage > maxPages)) && !isFilterOpened()) {
+            return
+        }
+
         isLoading = true
 
-        val data = filterParams?.let {
+        val data = if (isFilterOpened() && isFilterReady()) {
             _items.clear()
-            (filterParams as MutableMap)[PARAM_PAGE_NAME] = currentPage.toString()
-            characterSearchUseCase(filterParams)
-        } ?: characterGetListUseCase(currentPage)
-
-
+            characterSearchUseCase(
+                mapOf(
+                    searchTextState.value.first to searchTextState.value.second,
+                    PARAM_PAGE_NAME to currentPage.toString()
+                )
+            )
+        } else {
+            characterGetListUseCase(currentPage)
+        }
 
         maxPages = data.info.pages
         _items.addAll(data.characters)
@@ -68,8 +79,17 @@ class MainListViewModel @Inject constructor(
         currentPage++
     }
 
+    fun clearFilterParams() {
+        _searchTextState.value = Pair("", "")
+    }
+
+    fun fillFilterParams(paramName: String, value: String) {
+        _searchTextState.value = Pair(paramName, value)
+    }
+
     companion object {
         const val TAG = "charTest:MainListViewModel"
         const val PARAM_PAGE_NAME = "page"
+        const val MIN_LEN_SEARCH = 3
     }
 }

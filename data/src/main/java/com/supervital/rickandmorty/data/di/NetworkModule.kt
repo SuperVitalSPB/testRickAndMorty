@@ -1,9 +1,12 @@
 package com.supervital.rickandmorty.data.di
 
+import android.content.Context
+// import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.supervital.rickandmorty.data.api.CharacterService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -17,9 +20,10 @@ const val BASE_URL: String = "https://rickandmortyapi.com/api/"
 class NetworkModule {
 
     @Provides
-    @Singleton
+    @Singleton // @ApplicationContext context: Context
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
+//             .addInterceptor(ChuckerInterceptor(context))
             .build()
     }
 

@@ -35,25 +35,28 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.supervital.rickandmorty.R.string
 
 @Composable
-fun MainTopAppBarScreen(viewModel: MainListViewModel = hiltViewModel()) {
+fun MainTopAppBarScreen(viewModel: MainListViewModel) {
     when (viewModel.searchWidgetState.value) {
         SearchWidgetState.CLOSED -> {
-            ClosedAppBar (
+            ClosedAppBar(
                 onSearchClicked = {
                     viewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
                 }
             )
         }
+
         SearchWidgetState.OPENED -> {
             OpenedAppBar(
-                text = viewModel.searchTextState.value,
-                onTextChange =  { viewModel.updateSearchTextState(newValue = it) },
+                text = viewModel.searchTextState.value.second,
+                onTextChange = { viewModel.updateSearchTextState(newValue = it) },
                 onCloseClicked = { viewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED) },
-                onSearchClicked = { filterParam, searchText -> viewModel.filterCharacters(filterParam, searchText) }
+                onSearchClicked = {
+                    viewModel.loadFilter()
+                },
+                viewModel = viewModel
             )
         }
     }
@@ -98,7 +101,8 @@ fun OpenedAppBar(
     text: String,
     onTextChange: (String) -> Unit,
     onCloseClicked: () -> Unit,
-    onSearchClicked: (String, String) -> Unit,
+    onSearchClicked: () -> Unit,
+    viewModel: MainListViewModel
 ) {
     var isEnterFilter by remember { mutableStateOf(false) }
     var filterParam by remember { mutableStateOf("") }
@@ -108,7 +112,10 @@ fun OpenedAppBar(
         Log.d(TAGs, "filterParam = $filterParam")
         isEnterFilter = filterParam.isNotEmpty()
         if (!isEnterFilter) {
+            viewModel.clearFilterParams()
             onCloseClicked()
+        }  else {
+            viewModel.fillFilterParams(filterParam, "")
         }
     })
 
@@ -142,7 +149,7 @@ fun OpenedAppBar(
                 singleLine = true,
                 leadingIcon = {
                     IconButton(
-                        onClick = { onSearchClicked(filterParam, text) }
+                        onClick = { onSearchClicked() }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Search,
@@ -176,7 +183,7 @@ fun OpenedAppBar(
                 ),
                 keyboardActions = KeyboardActions(
                     onSearch = {
-                        onSearchClicked(filterParam, text)
+                        onSearchClicked()
                     }
                 ),
                 colors = TextFieldDefaults.colors(

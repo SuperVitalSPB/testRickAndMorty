@@ -22,6 +22,7 @@ runtimeLivedata = "1.8.0-beta01"
 lifecycle = "2.8.7"
 lifecycleViewmodelComposeAndroid = "2.8.7"
 foundationLayout = "1.9.1"
+chucker = "4.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -62,6 +63,9 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 retrofit2-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+
+chucker-library = {group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker"}
+chucker-library-no-op = {group = "com.github.chuckerteam.chucker", name = "library-no-op", version.ref = "chucker"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
