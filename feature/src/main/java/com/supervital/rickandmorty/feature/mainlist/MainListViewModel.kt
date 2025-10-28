@@ -66,8 +66,7 @@ class MainListViewModel @Inject constructor(
             _items.clear()
             val result = characterSearchUseCase(
                 mapOf(
-                    searchTextState.value.first to searchTextState.value.second,
-                    PARAM_PAGE_NAME to currentPage.toString()
+                    searchTextState.value.first to searchTextState.value.second
                 )
             )
             when {
@@ -101,7 +100,6 @@ class MainListViewModel @Inject constructor(
     }
 
     companion object {
-        const val PARAM_PAGE_NAME = "page"
         const val MIN_LEN_SEARCH = 3
     }
 }
