@@ -74,7 +74,9 @@ fun MainListScreen(
         contentPadding = PaddingValues(16.dp),
         state = gridState
     ) {
-        items(items = viewModel.items, key = { it.id }) { item ->
+        items(items = viewModel.items.distinct(),
+            key = { it.id })
+        { item ->
             CharacterInfoScreen(
                 characterInfo = item,
                 showDetails = showDetails
