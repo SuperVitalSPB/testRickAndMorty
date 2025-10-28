@@ -79,9 +79,9 @@ class MainListViewModel @Inject constructor(
         data?.let {
             maxPages = data.info.pages
             _items.addAll(data.characters)
-            isLoading = false
             currentPage++
         }
+        isLoading = false
     }
 
     fun clearFilterParams() {
