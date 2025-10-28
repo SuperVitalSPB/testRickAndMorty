@@ -61,7 +61,6 @@ class MainListViewModel @Inject constructor(
         }
 
         isLoading = true
-        isNoData.value = false
 
         val data = if (isFilterOpened() && isFilterReady()) {
             _items.clear()
@@ -72,13 +71,17 @@ class MainListViewModel @Inject constructor(
                 )
             )
             when {
-                result.isSuccess -> result.getOrNull()
+                result.isSuccess -> {
+                    isNoData.value = false
+                    result.getOrNull()
+                }
                 else -> {
                     isNoData.value = true
                     null
                 }
             }
         } else {
+            isNoData.value =false
             characterGetListUseCase(currentPage)
         }
         data?.let {
