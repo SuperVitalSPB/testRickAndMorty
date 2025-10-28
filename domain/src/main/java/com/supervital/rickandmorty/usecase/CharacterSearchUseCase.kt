@@ -7,6 +7,8 @@ import javax.inject.Inject
 class CharacterSearchUseCase @Inject constructor(
     private val characterRepository: CharacterRepository
 ) {
-    suspend operator fun invoke(params: Map<String, String>): CharactersListInfo
-        = characterRepository.searchCharacters(params)
+    suspend operator fun invoke(params: Map<String, String>): Result<CharactersListInfo> =
+        runCatching {
+            characterRepository.searchCharacters(params)
+        }
 }

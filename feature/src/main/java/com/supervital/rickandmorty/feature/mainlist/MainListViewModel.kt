@@ -63,20 +63,25 @@ class MainListViewModel @Inject constructor(
 
         val data = if (isFilterOpened() && isFilterReady()) {
             _items.clear()
-            characterSearchUseCase(
+            val result = characterSearchUseCase(
                 mapOf(
                     searchTextState.value.first to searchTextState.value.second,
                     PARAM_PAGE_NAME to currentPage.toString()
                 )
             )
+            when {
+                result.isSuccess -> result.getOrNull()
+                else -> null
+            }
         } else {
             characterGetListUseCase(currentPage)
         }
-
-        maxPages = data.info.pages
-        _items.addAll(data.characters)
-        isLoading = false
-        currentPage++
+        data?.let {
+            maxPages = data.info.pages
+            _items.addAll(data.characters)
+            isLoading = false
+            currentPage++
+        }
     }
 
     fun clearFilterParams() {
