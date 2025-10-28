@@ -52,7 +52,12 @@ fun MainTopAppBarScreen(viewModel: MainListViewModel) {
             OpenedAppBar(
                 text = viewModel.searchTextState.value.second,
                 onTextChange = { viewModel.updateSearchTextState(newValue = it) },
-                onCloseClicked = { viewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED) },
+                onCloseClicked = {
+                    viewModel.apply {
+                        clearFilterParams()
+                        updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
+                    }
+                },
                 onSearchClicked = {
                     viewModel.loadFilter()
                 },
@@ -106,18 +111,6 @@ fun OpenedAppBar(
 ) {
     var isEnterFilter by remember { mutableStateOf(false) }
     var filterParam by remember { mutableStateOf("") }
-
-    RadioButtonsPopup(filterParam = { inFilterParam ->
-        filterParam = inFilterParam
-        Log.d(TAGs, "filterParam = $filterParam")
-        isEnterFilter = filterParam.isNotEmpty()
-        if (!isEnterFilter) {
-            viewModel.clearFilterParams()
-            onCloseClicked()
-        }  else {
-            viewModel.fillFilterParams(filterParam, "")
-        }
-    })
 
     if (isEnterFilter) {
         val focusRequester = remember { FocusRequester() }
@@ -198,5 +191,17 @@ fun OpenedAppBar(
         LaunchedEffect(Unit) {
             focusRequester.requestFocus()
         }
+    } else {
+        RadioButtonsPopup(filterParam = { inFilterParam ->
+            filterParam = inFilterParam
+            Log.d(TAGs, "filterParam = $filterParam")
+            isEnterFilter = filterParam.isNotEmpty()
+            if (!isEnterFilter) {
+                viewModel.clearFilterParams()
+                onCloseClicked()
+            }  else {
+                viewModel.fillFilterParams(filterParam, "")
+            }
+        })
     }
 }
