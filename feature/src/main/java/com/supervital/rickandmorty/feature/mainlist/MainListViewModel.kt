@@ -31,6 +31,7 @@ class MainListViewModel @Inject constructor(
     private var maxPages = 1
     private var currentPage = 1
     var isLoading = false
+    var isNoData = mutableStateOf(value = false)
 
     fun updateSearchWidgetState(newValue: SearchWidgetState) {
         _searchWidgetState.value = newValue
@@ -60,6 +61,7 @@ class MainListViewModel @Inject constructor(
         }
 
         isLoading = true
+        isNoData.value = false
 
         val data = if (isFilterOpened() && isFilterReady()) {
             _items.clear()
@@ -71,7 +73,10 @@ class MainListViewModel @Inject constructor(
             )
             when {
                 result.isSuccess -> result.getOrNull()
-                else -> null
+                else -> {
+                    isNoData.value = true
+                    null
+                }
             }
         } else {
             characterGetListUseCase(currentPage)
@@ -93,7 +98,6 @@ class MainListViewModel @Inject constructor(
     }
 
     companion object {
-        const val TAG = "charTest:MainListViewModel"
         const val PARAM_PAGE_NAME = "page"
         const val MIN_LEN_SEARCH = 3
     }
